@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="JSON\C2Level.cs" />
     <Compile Include="JSON\Chart.cs" />
     <Compile Include="JSON\Level.cs" />
     <Compile Include="MainForm.cs">

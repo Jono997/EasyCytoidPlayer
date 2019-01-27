@@ -27,15 +27,19 @@ namespace EasyCytoidPlayer
             InitializeComponent();
             ChartComboBox.Items.Add("");
             ChartComboBox.SelectedIndex = 0;
-            UpdateEnable();
+            UpdateUI();
         }
         
-        private void UpdateEnable()
+        private void UpdateUI()
         {
-            bool enabled = optionsform.Cytoid_Player_path != "";
+            #region Update enable
+            bool enabled = optionsform.Use_C2_Player ? optionsform.C2_Player_path != "" : optionsform.Cytoid_Player_path != "";
             Chart_folderTextBox.Enabled = Chart_folder_browseButton.Enabled = enabled;
             ChartComboBox.Enabled = enabled ? ChartComboBoxEnabled() : false;
             OpenButton.Enabled = enabled ? OpenButtonEnabled() : false;
+            #endregion
+
+            OpenButton.Text = "Open in " + (optionsform.Use_C2_Player ? "Cytus 2" : "Cytoid") + " Player";
         }
 
         private bool ChartComboBoxEnabled()
@@ -52,7 +56,7 @@ namespace EasyCytoidPlayer
         {
             optionsform.Refresh_UI();
             optionsform.ShowDialog();
-            UpdateEnable();
+            UpdateUI();
         }
 
         private void Chart_folder_browseButton_Click(object sender, EventArgs e)
@@ -94,31 +98,76 @@ namespace EasyCytoidPlayer
             OpenButton.Enabled = OpenButtonEnabled();
         }
 
-        private void OpenButton_Click(object sender, EventArgs e)
+        private string GetChartAudio(JSON.Level level, int chart)
         {
-            #region Copy level to play directory
-            if (!Directory.Exists(play_directory))
-                Directory.CreateDirectory(play_directory);
-            Directory.Delete(play_directory, true);
-            ATEMMethods.CopyDirectory(Chart_folderTextBox.Text, play_directory);
-            JSON.Level level = current_level.Clone();
-            level.charts = new JSON.Chart[] { level.charts[ChartComboBox.SelectedIndex] };
-            string music = level.charts[0].music_override.path;
+            string music = level.charts[chart].music_override.path;
             if (music == "") music = level.music.path;
             if (music.Split('.').Last() == "mp3")
             {
-                music = music.Substring(0, music.Length - 3) + "wav";
-                level.charts[0].music_override.path = music;
+                return music.Substring(0, music.Length - 3) + "wav";
             }
-            level.Save(play_directory + "\\level.json");
-            #endregion
+            return music;
+        }
 
-            #region Launch Cytoid Player
-            Process cp_process = new Process();
-            cp_process.StartInfo = new ProcessStartInfo(optionsform.Cytoid_Player_path);
-            cp_process.Start();
-            cp_process.WaitForExit();
-            #endregion
+        private void OpenButton_Click(object sender, EventArgs e)
+        {
+            if (optionsform.Use_C2_Player)
+            {
+                #region Cytus 2
+                #region Get directory
+                string[] c2_directory_split = optionsform.C2_Player_path.Split('\\');
+                string c2_directory = c2_directory_split.SubArray(0, c2_directory_split.Length - 1).Stitch('\\');
+                #endregion
+
+                #region Create new settings.txt
+                string backup_settings_txt = File.ReadAllText(c2_directory + "\\Settings.txt", Encoding.UTF8);
+                JSON.C2Level level = JSON.C2Level.Load(c2_directory + "\\Settings.txt");
+                level.Name = current_level.title;
+                level.DiffName = (string)ChartComboBox.SelectedItem;
+                level.DiffNumber = current_level.charts[ChartComboBox.SelectedIndex].difficulty;
+                level.Musicpath = Chart_folderTextBox.Text + '\\' + GetChartAudio(current_level, ChartComboBox.SelectedIndex);
+                level.Backgroundpath = Chart_folderTextBox.Text + '\\' + current_level.background.path;
+                level.Chartpath = Chart_folderTextBox.Text + '\\' + current_level.charts[ChartComboBox.SelectedIndex].path;
+                level.Save(c2_directory + "\\Settings.txt");
+                #endregion
+                    
+                #region Launch Cytus 2 Player
+                string cwd = Environment.CurrentDirectory;
+                Environment.CurrentDirectory = c2_directory;
+                Process c2p_process = new Process();
+                c2p_process.StartInfo = new ProcessStartInfo("PlayerDemo.exe");
+                c2p_process.Start();
+                c2p_process.WaitForExit();
+                #endregion
+
+                #region Clean up
+                Environment.CurrentDirectory = cwd;
+                File.WriteAllText(c2_directory + "\\Settings.txt", backup_settings_txt, Encoding.UTF8);
+                #endregion
+                #endregion
+            }
+            else
+            {
+                #region Cytoid
+                #region Copy level to play directory
+                if (!Directory.Exists(play_directory))
+                    Directory.CreateDirectory(play_directory);
+                Directory.Delete(play_directory, true);
+                ATEMMethods.CopyDirectory(Chart_folderTextBox.Text, play_directory);
+                JSON.Level level = current_level.Clone();
+                level.charts = new JSON.Chart[] { level.charts[ChartComboBox.SelectedIndex] };
+                level.charts[0].music_override = new JSON.File() { path = GetChartAudio(level, 0) };
+                level.Save(play_directory + "\\level.json");
+                #endregion
+
+                #region Launch Cytoid Player
+                Process cp_process = new Process();
+                cp_process.StartInfo = new ProcessStartInfo(optionsform.Cytoid_Player_path);
+                cp_process.Start();
+                cp_process.WaitForExit();
+                #endregion
+                #endregion
+            }
         }
     }
 }
