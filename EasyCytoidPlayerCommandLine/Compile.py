@@ -3,7 +3,7 @@ EscapeQuote1 = False
 EscapeQuote2 = True
 EncaseCurly = False
 CompileToSh = False
-AddExecPermissionsAfterCompile = True
+AddExecPermissionsAfterCompile = False
 # Note: AddExecPermissionsAfterCompile only works on Mac and Linux.
 
 # Read in Main.py

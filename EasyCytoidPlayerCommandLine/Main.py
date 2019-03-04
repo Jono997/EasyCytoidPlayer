@@ -9,9 +9,9 @@ import sys
 
 # Define constants
 Cytoid_player_directory = "Library/Application Support/TigerHix/Cytoid/player"
-ECP_file_directory = "."#"Library/Application Support/Jono99/EasyCytoidPlayer"
+ECP_file_directory = "Library/Application Support/Jono99/EasyCytoidPlayer"
 Settings_file_path = ECP_file_directory + "/settings.txt"
-System_clear_command = 'cls'#'clear'
+System_clear_command = 'clear'
 Current_setting_file_version = 1
 LevelJSON_file_name = "level.json"
 Exit_string = "EXIT"
