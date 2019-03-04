@@ -9,9 +9,9 @@ import sys
 
 # Define constants
 Cytoid_player_directory = "Library/Application Support/TigerHix/Cytoid/player"
-ECP_file_directory = "Library/Application Support/Jono99/EasyCytoidPlayer"
+ECP_file_directory = "."#"Library/Application Support/Jono99/EasyCytoidPlayer"
 Settings_file_path = ECP_file_directory + "/settings.txt"
-System_clear_command = 'clear'
+System_clear_command = 'cls'#'clear'
 Current_setting_file_version = 1
 LevelJSON_file_name = "level.json"
 Exit_string = "EXIT"
@@ -120,10 +120,12 @@ class MainScene(CScene):
 
     def give_chart_folder(self):
         while True:
-            print "Type in the path to the folder where your chart is or type 'EXIT' to exit the program"
+            print "Type in the path to the folder where your chart is, type in 'OPTIONS' to change your options or type 'EXIT' to exit the program"
             _path = raw_input()
             if _path == Exit_string:
                 return
+            elif _path == "OPTIONS":
+                OptionsScene(self).start([])
             elif not os.path.isdir(_path):
                 clear()
                 print "INVALID: The folder \"" + _path + "\" does not exist."
@@ -157,7 +159,6 @@ class MainScene(CScene):
                 print str(i + 1) + ":", _charts[i]
             print "0: Exit"
             _chart = raw_input()
-            print [_chart]
             if _chart == '0':
                 return
             else:
@@ -191,7 +192,9 @@ class MainScene(CScene):
         _file.close()
 
         # Run Cytoid Player
-
+        print "executing..."
+        os.system('"' + Settings.cytoid_player_path + "/Contents/MacOS/CytoidPlayer 1.5.2\"")
+        print "executed"
         
 class OptionsScene(CScene):
     def run(self, args):
@@ -200,22 +203,34 @@ class OptionsScene(CScene):
         else:
             self.select_option()
 
-    def select_option():
-        clear()
-        print "Select an option by inputting the option's number and pressing enter"
-        print "1: Change Cytoid Player location"
-        print "0: Exit menu"
-        if _command == '1':
-            self.change_cytoid_player_path()
-        elif _command != '0':
-            self.select_option()
+    def select_option(self):
+        while True:
+            clear()
+            print "Select an option by inputting the option's number and pressing enter"
+            print "1: Change Cytoid Player location"
+            print "0: Exit menu"
+            _command = raw_input()
+            if _command == '1':
+                self.change_cytoid_player_path()
+            elif _command == '0':
+                return
 
     def change_cytoid_player_path(self):
-        print "Type the path to the Cytoid Player app or type 'EXIT' to cancel out of this menu"
-        _new_path = raw_input()
-        print [_new_path]
-        if _new_path != Exit_string:
-            Settings.cytoid_player_path = _new_path
-            Settings.save()
+        while True:
+            print "Type the path to the Cytoid Player app or type 'EXIT' to cancel out of this menu"
+            _new_path = raw_input()
+            if _new_path == "EXIT":
+                return
+            elif _new_path[-4:] != '.app':
+                _new_path += '.app'
+            print _new_path
+            if os.path.isdir(_new_path):
+                Settings.cytoid_player_path = _new_path
+                Settings.save()
+                return
+            else:
+                clear()
+                print "The given app does not exist"
+            
 
 MainScene().start(sys.argv)
