@@ -1,0 +1,11 @@
+﻿Thank you for using Easy Cytoid Player Command Line
+
+The first time you open Cytoid Player Command Line, you will need to set it up. To do so, open Terminal and navigate until you're in the folder with the Easy Cytoid Player.command file. Here are the necessary commands:
+cd foldername: go into that folder. Encase foldername in quote marks if it has spaces in it. foldername is case sensative
+cd ..: go out of the current folder.
+ls: se all the files in the current folder.
+chmod u+x "Easy Cytoid Player.command": run this once you're in the folder with Easy Cytoid Player.command. Afterwards, you should be able to run the file by double-clicking it.
+Once you've done that, open Easy Cytoid Player.command and type in the path to the Cytoid Player
+
+Afterwards, Easy Cytoid Player Command Line is ready to use. Simply paste the path to the chart's folder into the terminal when it asks, select your difficulty by typing in its respective number and the chart will begin playing inw your chart in Cytoid Player.
+However, you do need to have a wav version of the chart's mp3 file ready to use. If you don't have this, you will need to convert it yourself. Using Audacity for this is recommended. You can download it at https://www.audacityteam.org. Make sure the wav file has the same name as the mp3 file it originates from (eg. if it was from music.mp3, name it music.wav).
