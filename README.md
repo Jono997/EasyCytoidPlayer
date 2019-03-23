@@ -11,11 +11,9 @@ Once you've done that, click the "Save" button and the settings window will clos
 ## How to use Easy Cytoid Player
 To use Easy Cytoid Player, you must first go through the setup. That process is detailed above.
 
-To use Easy Cytoid Player, first covert the chart's audio to wav format. The recommended way to do this is by importing it into Audacity and exporting it into wav format with the same filename as the original audio file (for example, naming the file "audio.wav" if the original was "audio.mp3".
+To use Easy Cytoid Player, open Easy Cytoid Player and point it to the chart folder. You can do this by either copy-pasting the path or clicking the button next to the text box and navigating there manually.
 
-Once you've done that. Open Easy Cytoid Player and point it to the chart folder. You can do this by either copy-pasting the path or clicking the button next to the text box and navigating there manually.
-
-Finally, select the chart difficulty and click the "Open in Cytoid Player" button.
+Afterwards, select the chart difficulty and click the "Open in Cytoid Player" button.
 
 ## How does Easy Cytoid Player work?
 The way Easy Cytoid Player works varies depending on which player you're using

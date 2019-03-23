@@ -1,3 +1,5 @@
 ﻿0.5: Initial release
 0.6: Added Cytus 2 Player support
      Filled in assembly information
+0.8: Added automatic mp3 to wav conversion
+     Fixed C1 format charts not working in Cytus 2 Player

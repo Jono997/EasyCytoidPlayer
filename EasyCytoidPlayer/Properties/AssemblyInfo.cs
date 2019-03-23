@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("A wrapper for Cytoid Player and Cytus 2 Player to make them easier to use")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Jono99")]
-[assembly: AssemblyProduct("Easy Cytoid Player version 0.6")]
+[assembly: AssemblyProduct("Easy Cytoid Player version 0.8")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.6.0.0")]
+[assembly: AssemblyVersion("0.8.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]

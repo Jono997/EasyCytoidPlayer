@@ -128,9 +128,38 @@ namespace EasyCytoidPlayer
                 level.Musicpath = Chart_folderTextBox.Text + '\\' + GetChartAudio(current_level, ChartComboBox.SelectedIndex);
                 level.Backgroundpath = Chart_folderTextBox.Text + '\\' + current_level.background.path;
                 level.Chartpath = Chart_folderTextBox.Text + '\\' + current_level.charts[ChartComboBox.SelectedIndex].path;
+
+                #region Determine chart type
+                string chart = File.ReadAllText(level.Chartpath).Trim();
+                if (chart[0] == '{')
+                    level.useOldFormat = false;
+                else
+                    level.useOldFormat = true;
+                #endregion
+
                 level.Save(c2_directory + "\\Settings.txt");
                 #endregion
-                    
+
+                #region Create wav file
+                bool generated_wav = false;
+                if (!File.Exists(level.Musicpath))
+                {
+                    CacheWav cache = null;
+                    string cachefile_path = level.Musicpath.Substring(0, level.Musicpath.Length - 3) + "mp3.cachewav";
+                    if (File.Exists(cachefile_path))
+                    {
+                        cache = CacheWav.Load(cachefile_path);
+                    }
+                    else
+                    {
+                        cache = new CacheWav(cachefile_path.Substring(0, cachefile_path.Length - 9));
+                    }
+                    File.WriteAllBytes(level.Musicpath, cache.GetWav());
+                    cache.Save();
+                    generated_wav = true;
+                }
+                #endregion
+
                 #region Launch Cytus 2 Player
                 string cwd = Environment.CurrentDirectory;
                 Environment.CurrentDirectory = c2_directory;
@@ -143,6 +172,8 @@ namespace EasyCytoidPlayer
                 #region Clean up
                 Environment.CurrentDirectory = cwd;
                 File.WriteAllText(c2_directory + "\\Settings.txt", backup_settings_txt, Encoding.UTF8);
+                if (generated_wav)
+                    File.Delete(level.Musicpath);
                 #endregion
                 #endregion
             }
@@ -158,6 +189,24 @@ namespace EasyCytoidPlayer
                 level.charts = new JSON.Chart[] { level.charts[ChartComboBox.SelectedIndex] };
                 level.charts[0].music_override = new JSON.File() { path = GetChartAudio(level, 0) };
                 level.Save(play_directory + "\\level.json");
+                #endregion
+
+                #region Create wav file
+                if (!File.Exists(play_directory + '\\' + level.charts[0].music_override.path))
+                {
+                    CacheWav cache = null;
+                    string cachefile_path = Chart_folderTextBox.Text + '\\' + level.charts[0].music_override.path.Substring(0, level.charts[0].music_override.path.Length - 3) + "mp3.cachewav";
+                    if (File.Exists(cachefile_path))
+                    {
+                        cache = CacheWav.Load(cachefile_path);
+                    }
+                    else
+                    {
+                        cache = new CacheWav(cachefile_path.Substring(0, cachefile_path.Length - 9));
+                    }
+                    File.WriteAllBytes(play_directory + '\\' + level.charts[0].music_override.path, cache.GetWav());
+                    cache.Save();
+                }
                 #endregion
 
                 #region Launch Cytoid Player

@@ -19,6 +19,7 @@ namespace EasyCytoidPlayer.JSON
         public string Musicpath;
         public string Backgroundpath;
         public string Chartpath;
+        public bool useOldFormat;
 
         public C2Level()
         {
@@ -32,6 +33,7 @@ namespace EasyCytoidPlayer.JSON
             Musicpath = "Music.wav";
             Backgroundpath = "bg_gamever.png";
             Chartpath = "output.cyt";
+            useOldFormat = false;
         }
 
         public void Save(string path)
